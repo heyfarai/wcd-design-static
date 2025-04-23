@@ -6,6 +6,11 @@ from bs4 import BeautifulSoup
 
 def download_file(url, local_path):
     """Download a file from URL to local path"""
+    # Skip .woff2 files
+    if local_path.endswith('.woff2'):
+        print(f"Skipping .woff2 file: {url}")
+        return True
+        
     response = requests.get(url)
     if response.status_code == 200:
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
@@ -47,7 +52,7 @@ def update_html_references(html_path):
         # Create directory if it doesn't exist
         os.makedirs(os.path.dirname(local_path), exist_ok=True)
         
-        # Download the file
+        # Download the file (or skip if it's a .woff2)
         if download_file(full_url, local_path):
             # Update the reference in HTML
             content = content.replace(full_url, local_path)
